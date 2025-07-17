@@ -17,7 +17,7 @@ import networkx as nx
 from bs4 import BeautifulSoup, SoupStrainer
 from networkx.readwrite.gexf import GEXFWriter
 import phonenumbers
-
+import requests
 
 if sys.version_info >= (3, 8):  # PEP 589 support (TypedDict)
     class _GraphNode(typing.TypedDict):
@@ -66,14 +66,26 @@ EmptyTree = typing.Dict[None, object]
 
 
 class SpiderFootHelpers():
-    """SpiderFoot helper functions.
+    def fetch_proxies(self, query, start, limit):
+        url = f"https://api.proxynova.com/comb?query={query}&start={start}&limit={limit}"
+        response = requests.get(url)
+        
+        if response.status_code == 200:
+            try:
+                data = response.json()
+                return data
+            except ValueError as e:
+                print(f"Error parsing JSON: {e}")
+                return None
+        else:
+            print(f"Failed to fetch data: {response.status_code}")
+            return None
 
-    This class is used to store static helper functions which are
-    designed to function independent of scan config or global config.
-
-    Todo:
-       Eventually split this class into separate files.
-    """
+    def set_proxies(self, proxies):
+        # Example logic to set proxies
+        for proxy in proxies:
+            # Set each proxy in your HTTP client configuration
+            pass
 
     @staticmethod
     def dataPath() -> str:

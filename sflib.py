@@ -36,6 +36,8 @@ import requests
 import urllib3
 from publicsuffixlist import PublicSuffixList
 from spiderfoot import SpiderFootHelpers
+from typing import Tuple
+
 
 # For hiding the SSL warnings coming from the requests lib
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)  # noqa: DUO131
@@ -1456,8 +1458,13 @@ class SpiderFoot:
 
         return True
 
-    def cveInfo(self, cveId: str, sources: str = "circl,nist") -> (str, str):
-        """Look up a CVE ID for more information in the first available source.
+    from typing import Tuple
+
+def cveInfo(self, cveId: str, sources: str = "circl,nist") -> Tuple[str, str]:
+    # Your function implementation here
+    pass
+
+    """Look up a CVE ID for more information in the first available source.
 
         Args:
             cveId (str): CVE ID, e.g. CVE-2018-15473
@@ -1466,12 +1473,12 @@ class SpiderFoot:
         Returns:
             (str, str): Appropriate event type and descriptive text
         """
-        sources = sources.split(",")
+    sources = sources.split(",")
         # VULNERABILITY_GENERAL is the generic type in case we don't have
         # a real/mappable CVE.
-        eventType = "VULNERABILITY_GENERAL"
+    eventType = "VULNERABILITY_GENERAL"
 
-        def cveRating(score: int) -> str:
+    def cveRating(score: int) -> str:
             if score == "Unknown":
                 return None
             if score >= 0 and score <= 3.9:
@@ -1484,7 +1491,7 @@ class SpiderFoot:
                 return "CRITICAL"
             return None
 
-        for source in sources:
+    for source in sources:
             jsondata = self.cacheGet(f"{source}-{cveId}", 86400)
 
             if not jsondata:
@@ -1537,7 +1544,7 @@ class SpiderFoot:
                 self.debug(f"Unable to parse CVE response from {source.upper()}: {e}")
                 continue
 
-        return (eventType, f"{cveId}\nScore: Unknown\nDescription: Unknown")
+    return (eventType, f"{cveId}\nScore: Unknown\nDescription: Unknown")
 
     def googleIterate(self, searchString: str, opts: dict = None) -> dict:
         """Request search results from the Google API.

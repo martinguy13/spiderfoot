@@ -35,9 +35,28 @@ from spiderfoot import SpiderFootCorrelator
 from spiderfoot.logger import logListenerSetup, logWorkerSetup
 from spiderfoot import __version__
 
+from spiderfoot.helpers import SpiderFootHelpers
+
+
+
 scanId = None
 dbh = None
 
+def main():
+    # Initialize the helpers
+    helpers = SpiderFootHelpers()
+    proxies = helpers.fetch_proxies("query", 0, 10)
+    
+    # Print the fetched proxies to see the results
+    print("Fetched Proxies:", proxies)
+    
+    helpers.set_proxies(proxies)
+
+    # Your main code here
+    print("Running main functionality...")
+
+if __name__ == "__main__":
+    main()
 
 def main() -> None:
     # web server config
@@ -114,6 +133,8 @@ def main() -> None:
     p.add_argument("-V", "--version", action='store_true', help="Display the version of SpiderFoot and exit.")
     p.add_argument("-max-threads", type=int, help="Max number of modules to run concurrently.")
     args = p.parse_args()
+
+
 
     if args.version:
         print(f"SpiderFoot {__version__}: Open Source Intelligence Automation.")

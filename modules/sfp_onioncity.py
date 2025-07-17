@@ -119,7 +119,7 @@ class sfp_onioncity(SpiderFootPlugin):
             },
         )
         if res is None:
-            # Failed to talk to the bing API or no results returned
+            # Failed to talk to the Google API or no results returned
             return
 
         urls = res["urls"]
@@ -158,7 +158,8 @@ class sfp_onioncity(SpiderFootPlugin):
             if self.opts['fetchlinks']:
                 res = self.sf.fetchUrl(torlink, timeout=self.opts['_fetchtimeout'],
                                        useragent=self.opts['_useragent'],
-                                       verify=False)
+                                       verify=False,
+                                       proxy="127.0.0.1:9050")  # Use the Tor proxy
 
                 if res['content'] is None:
                     self.debug("Ignoring " + link + " as no data returned")
@@ -189,3 +190,4 @@ class sfp_onioncity(SpiderFootPlugin):
                 self.notifyListeners(evt)
 
 # End of sfp_onioncity class
+

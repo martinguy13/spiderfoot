@@ -11,6 +11,19 @@
 # Licence:     MIT
 # -------------------------------------------------------------------------------
 
+# -*- coding: utf-8 -*-
+# -------------------------------------------------------------------------------
+# Name:         sfp_onionsearchengine
+# Purpose:      Searches the Tor search engine onionsearchengine.com for content
+#               related to the domain in question.
+#
+# Author:      Steve Micallef <steve@binarypool.com>
+#
+# Created:     27/10/2018
+# Copyright:   (c) Steve Micallef 2018
+# Licence:     MIT
+# -------------------------------------------------------------------------------
+
 import re
 import urllib.error
 import urllib.parse
@@ -181,5 +194,6 @@ class sfp_onionsearchengine(SpiderFootPlugin):
                 evt = SpiderFootEvent("DARKNET_MENTION_CONTENT", "..." + data + "...",
                                       self.__name__, evt)
                 self.notifyListeners(evt)
+
 
 # End of sfp_onionsearchengine class
