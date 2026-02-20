@@ -35,28 +35,8 @@ from spiderfoot import SpiderFootCorrelator
 from spiderfoot.logger import logListenerSetup, logWorkerSetup
 from spiderfoot import __version__
 
-from spiderfoot.helpers import SpiderFootHelpers
-
-
-
 scanId = None
 dbh = None
-
-def main():
-    # Initialize the helpers
-    helpers = SpiderFootHelpers()
-    proxies = helpers.fetch_proxies("query", 0, 10)
-    
-    # Print the fetched proxies to see the results
-    print("Fetched Proxies:", proxies)
-    
-    helpers.set_proxies(proxies)
-
-    # Your main code here
-    print("Running main functionality...")
-
-if __name__ == "__main__":
-    main()
 
 def main() -> None:
     # web server config
