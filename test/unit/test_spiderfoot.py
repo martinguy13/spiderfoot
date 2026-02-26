@@ -1,6 +1,7 @@
 # test_spiderfoot.py
 import pytest
 import unittest
+import responses
 
 from sflib import SpiderFoot
 
@@ -671,20 +672,52 @@ class TestSpiderFoot(unittest.TestCase):
         self.assertTrue(sf.useProxyForUrl('spiderfoot.net'))
         self.assertTrue(sf.useProxyForUrl('1.1.1.1'))
 
+    @responses.activate
     def test_fetchUrl_argument_url_should_return_http_response_as_dict(self):
         sf = SpiderFoot(self.default_options)
+        responses.add(
+            responses.GET,
+            "https://spiderfoot.net/",
+            body="ok",
+            status=200,
+            headers={'content-type': 'text/plain'}
+        )
 
         res = sf.fetchUrl("https://spiderfoot.net/")
         self.assertIsInstance(res, dict)
         self.assertEqual(res['code'], "200")
         self.assertNotEqual(res['content'], None)
 
+    @responses.activate
     def test_fetchUrl_argument_headOnly_should_return_http_response_as_dict(self):
         sf = SpiderFoot(self.default_options)
+        responses.add(
+            responses.HEAD,
+            "https://spiderfoot.net/",
+            status=301,
+            headers={
+                'location': 'https://www.spiderfoot.net/',
+                'content-length': '0'
+            }
+        )
 
         res = sf.fetchUrl("https://spiderfoot.net/", headOnly=True)
         self.assertIsInstance(res, dict)
         self.assertEqual(res['code'], "301")
+        self.assertEqual(res['content'], None)
+
+    @responses.activate
+    def test_fetchUrl_argument_headOnly_network_error_should_return_dict(self):
+        sf = SpiderFoot(self.default_options)
+        responses.add(
+            responses.HEAD,
+            "https://spiderfoot.net/",
+            body=Exception("network error"),
+        )
+
+        res = sf.fetchUrl("https://spiderfoot.net/", headOnly=True)
+        self.assertIsInstance(res, dict)
+        self.assertEqual(res['code'], None)
         self.assertEqual(res['content'], None)
 
     def test_fetchUrl_argument_url_invalid_type_should_return_none(self):

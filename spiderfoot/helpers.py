@@ -437,6 +437,17 @@ class SpiderFootHelpers():
         return words
 
     @staticmethod
+    def _ensureNumpyAliasesForNetworkxGexf() -> None:
+        """Ensure NumPy aliases expected by older NetworkX GEXF writer exist."""
+        try:
+            import numpy as np
+        except ImportError:
+            return
+
+        if not hasattr(np, "float_"):
+            np.float_ = np.float64
+
+    @staticmethod
     def buildGraphGexf(root: str, title: str, data: typing.List[str], flt: typing.Optional[typing.List[str]] = None) -> str:
         """Convert supplied raw data into GEXF (Graph Exchange XML Format) format (e.g. for Gephi).
 
@@ -489,6 +500,7 @@ class SpiderFootHelpers():
 
             graph.add_edge(src, dst)
 
+        SpiderFootHelpers._ensureNumpyAliasesForNetworkxGexf()
         gexf = GEXFWriter(graph=graph)
         return str(gexf).encode('utf-8')
 
